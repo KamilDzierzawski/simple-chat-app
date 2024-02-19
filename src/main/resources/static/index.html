@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Client</title>
+</head>
+<body>
+<div>
+    <label for="messageInput">Message:</label>
+    <input type="text" id="messageInput">
+    <button onclick="sendMessage()">Send</button>
+</div>
+<div id="chat"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.0/sockjs.min.js"></script>
+<script>
+    const socket = new SockJS('/gs-message');
+    const stompClient = Stomp.over(socket);
+    stompClient.connect({}, (frame) => {
+        console.log('Connected: ' + frame);
+        stompClient.subscribe('/topic/public', (message) => {
+            const chatDiv = document.getElementById('chat');
+            const messageData = JSON.parse(message.body);
+            const messageElement = document.createElement('p');
+            messageElement.textContent = messageData.message;
+            chatDiv.appendChild(messageElement);
+            console.log('Received message:', messageData.message);
+        });
+    });
+
+    function sendMessage() {
+        const messageInput = document.getElementById('messageInput');
+        const message = messageInput.value;
+        stompClient.send('/app/chat.sendMessage', {}, JSON.stringify({ message: message }));
+        messageInput.value = '';
+    }
+</script>
+</body>
+</html>
