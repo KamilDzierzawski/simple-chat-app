@@ -1,0 +1,11 @@
+version: '3'
+services:
+  postgres:
+    image: postgres
+    container_name: simple-chat-app
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: chatApp
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: user123@
