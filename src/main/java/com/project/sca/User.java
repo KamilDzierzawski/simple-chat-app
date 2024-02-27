@@ -12,6 +12,9 @@ public class User {
     @Column(unique = true)
     private String nickname;
 
+    @Column
+    private String password;
+
     public User() {
 
     }
@@ -22,5 +25,9 @@ public class User {
 
     public String getNickname() {
         return this.nickname;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
