@@ -7,6 +7,8 @@ import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractAuthenticationFilterConfigurer;
+import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.SecurityFilterChain;
@@ -15,15 +17,18 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
 
-    @Autowired
-    private MyUserDetailsService myUserDetailsService;
+    private final CustomUserDetailsService customUserDetailsService;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
+
+    public SecurityConfig(CustomUserDetailsService customUserDetailsService, PasswordEncoder passwordEncoder) {
+        this.customUserDetailsService = customUserDetailsService;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(myUserDetailsService)
+        auth.userDetailsService(customUserDetailsService)
                 .passwordEncoder(passwordEncoder);
     }
 
@@ -32,10 +37,8 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
         http
                 .authorizeHttpRequests(authorize -> authorize
                         .anyRequest().authenticated())
-                .formLogin(login -> login
-                        .permitAll())
-                .logout(logout -> logout
-                        .permitAll());
+                .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
+                .logout(LogoutConfigurer::permitAll);
         return http.build();
     }
 }
