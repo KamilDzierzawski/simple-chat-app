@@ -1,5 +1,6 @@
-package com.project.sca;
+package com.project.sca.config;
 
+import com.project.sca.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

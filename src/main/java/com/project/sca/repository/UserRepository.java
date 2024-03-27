@@ -1,5 +1,6 @@
-package com.project.sca;
+package com.project.sca.repository;
 
+import com.project.sca.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

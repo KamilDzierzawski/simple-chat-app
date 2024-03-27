@@ -1,5 +1,6 @@
-package com.project.sca;
+package com.project.sca.controllers;
 
+import com.project.sca.MessageDTO;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
